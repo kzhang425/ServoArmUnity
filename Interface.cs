@@ -19,6 +19,7 @@ namespace Lib
             Pan,
             Tilt,
             Step,
+            Error,
         }
 
         public Interface()

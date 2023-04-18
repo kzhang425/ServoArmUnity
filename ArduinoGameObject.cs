@@ -1,6 +1,7 @@
 using Lib;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 public class ArduinoGameObject : MonoBehaviour
@@ -19,7 +20,8 @@ public class ArduinoGameObject : MonoBehaviour
         
     }
 
-    public void write_movement(string cmd, int pos)
+    // Takes the string argument and transforms it into the enums that the functions use
+    private Interface.Movement assign(string cmd)
     {
         Interface.Movement move_type;
         switch (cmd)
@@ -37,8 +39,27 @@ public class ArduinoGameObject : MonoBehaviour
                 break;
 
             default:
-                return;
+                move_type = Interface.Movement.Error;
+                break;
         }
+        return move_type;
+    }
+
+    public void write_movement(string cmd, int pos)
+    {
+        Interface.Movement move_type = assign(cmd);
+
+        if (move_type == Interface.Movement.Error) return;
+
         inter.write_movement(pos, move_type);
+    }
+
+    public void write_speed_movement(string cmd, int pos, int speed)
+    {
+        Interface.Movement move_type = assign(cmd);
+
+        if (move_type == Interface.Movement.Error) return;
+
+        inter.write_controlled_speed(pos, move_type, speed);
     }
 }
